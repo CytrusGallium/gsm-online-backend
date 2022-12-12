@@ -1,17 +1,23 @@
 const router = require("express").Router();
-const {RepairOrder, CreateRepairOrderItem, AddNewRepairOrderToDB, RepairOrderState} = require('../models/repair-order.js');
+const {RepairOrder, AddNewRepairOrderToDB, RepairOrderState} = require('../models/repair-order.js');
 
 router.post("/", async (req,res) => {
     try {
         console.log("Adding repair order...");
         console.log(req.body);
 
-        const itemList = JSON.parse(req.body.items);
+        console.log("MARK 0");
+        const itemList = req.body.items;
         console.log("TYPE = " + typeof itemList);
         console.log("JSON = " + JSON.stringify(itemList));
         console.log("LEN = " + itemList.length);
+        
+        console.log("PHONE = " + req.body.phone);
+        console.log("ROID = " + req.body.roid);
 
-        AddNewRepairOrderToDB("Tlemcen", "Customer 1", "979461321321", itemList);
+        console.log("MARK 1");
+        await AddNewRepairOrderToDB(req.body.location, req.body.customer, req.body.phone, req.body.roid, itemList);
+        console.log("MARK 2");
 
         // Respond
         res.status(200).send("OK");
