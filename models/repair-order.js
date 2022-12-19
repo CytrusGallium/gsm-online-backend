@@ -28,8 +28,16 @@ const CreateRepairOrderItem = (ParamRepairType, ParamDeviceRef, ParamDeviceIMEI,
     return { type: ParamRepairType, ref: ParamDeviceRef, imei: ParamDeviceIMEI, problem: ParamProblemName, estPrice: ParamEstimatedPrice, price: ParamFinalPrice, state: RepairOrderState.PENDING };
 }
 
-const AddNewRepairOrderToDB = async (ParamLocation, ParamCustomer, ParamPhone, ParamROID, ParamItems) => {
+const AddNewRepairOrderToDB = async (ParamLocation, ParamCustomer, ParamPhone, ParamROID, ParamItems, ParamCallback) => {
+    console.log("AddNewRepairOrderToDB()");
     await new RepairOrder({ location: ParamLocation, customer: ParamCustomer, phone: ParamPhone, roid: ParamROID, items: ParamItems }).save();
+    ParamCallback();
 }
 
-module.exports = { RepairOrder, CreateRepairOrderItem, AddNewRepairOrderToDB, RepairOrderState };
+const AddEmptyRepairOrderToDB = async (ParamROID, ParamCallback) => {
+    console.log("AddEmptyRepairOrderToDB()");
+    await new RepairOrder({ location: " ", customer: " ", phone: " ", roid: ParamROID, items: [] }).save();
+    ParamCallback();
+}
+
+module.exports = { RepairOrder, CreateRepairOrderItem, AddNewRepairOrderToDB, RepairOrderState, AddEmptyRepairOrderToDB };

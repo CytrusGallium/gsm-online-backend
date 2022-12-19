@@ -7,10 +7,17 @@ router.get("/", async (req, res) => {
 
     console.log("Getting repair orders list...");
 
+    // Prepare search parameters if any
+    let findParams = {};
+    if (req.query.roid) {
+        findParams = { roid: req.query.roid };
+        // console.log("ROID = " + req.query.roid);
+    }
+
     try {
 
-        RepairOrder.find({}).sort({ time: 'descending' }).exec((err, result) => {
-            sleep.sleep(1);
+        RepairOrder.find(findParams).sort({ time: 'descending' }).exec((err, result) => {
+            // sleep.sleep(1);
             res.status(200).send(PrepareDataForTable(result));
         });
 
@@ -23,7 +30,7 @@ router.get("/", async (req, res) => {
 const PrepareDataForTable = (ParamQueryResult) => {
     let result = [];
     ParamQueryResult.forEach(ro => {
-        result.push({roid:ro.roid, time:ro.time, customer:ro.customer, phone:ro.phone, items:ro.items});
+        result.push({ roid: ro.roid, time: ro.time, customer: ro.customer, phone: ro.phone, items: ro.items });
     });
     return result;
 }

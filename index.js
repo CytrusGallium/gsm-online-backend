@@ -9,15 +9,17 @@ const {CreateNewUser} = require('./models/users');
 const {CreateRepairOrderCounter} = require('./models/counter');
 
 // Routes
-const signupRoute = require('./routes/singup');
+// const signupRoute = require('./routes/singup');
 const loginRoute = require('./routes/login');
-const testRoute = require('./routes/test');
+// const testRoute = require('./routes/test');
 const pingRoute = require('./routes/ping');
-const addRepairOrdersRoute = require('./routes/add-repair-order');
-const getRepairOrdersRoute = require('./routes/get-repair-order');
-const editRepairOrdersRoute = require('./routes/edit-repair-order');
-const getNextROIDRoute = require('./routes/get-next-ro-id');
+const updateRepairOrderRoute = require('./routes/update-repair-order');
+// const addRepairOrdersRoute = require('./routes/add-repair-order');
+// const getRepairOrdersRoute = require('./routes/get-repair-order');
+// const editRepairOrdersRoute = require('./routes/edit-repair-order');
+// const getNextROIDRoute = require('./routes/get-next-ro-id');
 const getRepairOrdersListRoute = require('./routes/get-repair-orders-list');
+const generateEmptyRepairOrderRoute = require('./routes/generate-empty-repair-order');
 
 // Middleware
 // const {protect} = require('./authMiddleware.js');
@@ -44,16 +46,18 @@ app.use(express.json());
 app.use(cors());
 
 // Routes Setup
-app.use("/api/signup", signupRoute);
+// app.use("/api/signup", signupRoute);
 app.use("/api/login", loginRoute);
-app.use("/api/test", testRoute);
+// app.use("/api/test", testRoute);
 app.use("/api/ping", pingRoute);
-app.use("/api/add-repair-order", addRepairOrdersRoute);
-app.use("/api/get-repair-order", getRepairOrdersRoute);
-app.use("/api/edit-repair-order", editRepairOrdersRoute);
-app.use("/api/get-next-ro-id", getNextROIDRoute);
+// app.use("/api/add-repair-order", addRepairOrdersRoute);
+// app.use("/api/get-repair-order", getRepairOrdersRoute);
+// app.use("/api/edit-repair-order", editRepairOrdersRoute);
+// app.use("/api/get-next-ro-id", getNextROIDRoute);
 app.use("/api/get-repair-orders-list", getRepairOrdersListRoute);
 // app.use("/api/get-item-list", /*protect,*/ getItemListRoute);
+app.use("/api/generate-empty-repair-order", generateEmptyRepairOrderRoute);
+app.use("/api/update-repair-order", updateRepairOrderRoute);
 
 // Listen
 let port = process.env.PORT || 4000;

@@ -41,7 +41,9 @@ const GetCurrentRepairOrderCounterValue = async () => {
     }
 }
 
-const IncrementRepairOrderCounter = async (ParamResultCallback) => {
+const IncrementRepairOrderCounterAndGetNextROID = async (ParamResultCallback) => {
+
+    console.log("IncrementRepairOrderCounter()");
 
     let result = -1;
     Counter.findOne({ name: "repair-order" }, (err, counter) => {
@@ -55,8 +57,29 @@ const IncrementRepairOrderCounter = async (ParamResultCallback) => {
             }
         });
 
-        ParamResultCallback(result);
+        ParamResultCallback(GetYYMM() + "-" + AddZeroes(result));
     });
 }
 
-module.exports = { Counter, CreateRepairOrderCounter, IncrementRepairOrderCounter, GetCurrentRepairOrderCounterValue };
+function GetYYMM() {
+    var d = new Date();
+    var month = '' + (d.getMonth() + 1);
+    var year = '' + d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+
+    return year[2] + year[3] + "-" + month;
+}
+
+function AddZeroes (ParamID) {
+    let result = '' + ParamID;
+
+    for (let index = result.length; index < 8; index++) {
+        result = '0' + result;
+    }
+
+    return result;
+}
+
+module.exports = { Counter, CreateRepairOrderCounter, IncrementRepairOrderCounterAndGetNextROID, GetCurrentRepairOrderCounterValue };
