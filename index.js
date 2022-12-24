@@ -7,6 +7,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const {CreateNewUser} = require('./models/users');
 const {CreateRepairOrderCounter} = require('./models/counter');
+const path = require('path');
 
 // Routes
 // const signupRoute = require('./routes/singup');
@@ -20,6 +21,25 @@ const updateRepairOrderRoute = require('./routes/update-repair-order');
 // const getNextROIDRoute = require('./routes/get-next-ro-id');
 const getRepairOrdersListRoute = require('./routes/get-repair-orders-list');
 const generateEmptyRepairOrderRoute = require('./routes/generate-empty-repair-order');
+const newProductRoute = require('./routes/new-product');
+const getProductImageRoute = require('./routes/get-product-image');
+const getProductListRoute = require('./routes/get-product-list');
+
+// Multer START Config -----------------------------------------------------------------------------------------------------------
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'Uploads' ) // Error is null here, Uploads is the name of the folder where the received files will be stored.
+    },
+    filename: (req, file, cb) => {
+        console.log("FILE = " + file);
+        let filename = Date.now() + "_" + file.originalname;
+        cb(null, filename);
+    }
+})
+
+const upload = multer({storage: storage}) // This is the Middleware object
+// Multer END Config -------------------------------------------------------------------------------------------------------------
 
 // Middleware
 // const {protect} = require('./authMiddleware.js');
@@ -58,6 +78,9 @@ app.use("/api/get-repair-orders-list", getRepairOrdersListRoute);
 // app.use("/api/get-item-list", /*protect,*/ getItemListRoute);
 app.use("/api/generate-empty-repair-order", generateEmptyRepairOrderRoute);
 app.use("/api/update-repair-order", updateRepairOrderRoute);
+app.use("/api/new-product", upload.single("picture"), newProductRoute);
+app.use("/api/get-product-image", getProductImageRoute);
+app.use("/api/get-product-list", getProductListRoute);
 
 // Listen
 let port = process.env.PORT || 4000;

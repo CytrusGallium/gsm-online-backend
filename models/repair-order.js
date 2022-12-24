@@ -14,12 +14,15 @@ const repairOrderSchema = new mongoose.Schema({
     phone: { type: String, required: true },
     items: { type: Array, "default": [] },
     state: { type: String, default: RepairOrderState.PENDING },
+    totalPrice: { type: Number, default: 0 },
     fulfilledPaiement: { type: Number, default: 0 },
     deleted: { type: Boolean, default: false },
     roid: { type: String, required: true },
     version: { type: Number, default: 1 },
     primary_imei: { type: String, required: false }, // To facilitate research
-    locked: { type: Boolean, default: false }
+    locked: { type: Boolean, default: false },
+    empty: { type: Boolean, default: true },
+    note: { type: String, required: false }
 });
 
 const RepairOrder = mongoose.model("repairOrder", repairOrderSchema);
