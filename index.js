@@ -24,6 +24,7 @@ const generateEmptyRepairOrderRoute = require('./routes/generate-empty-repair-or
 const newProductRoute = require('./routes/new-product');
 const getProductImageRoute = require('./routes/get-product-image');
 const getProductListRoute = require('./routes/get-product-list');
+const validateRepairOrderRoute = require('./routes/validate-repair-order');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -81,6 +82,7 @@ app.use("/api/update-repair-order", updateRepairOrderRoute);
 app.use("/api/new-product", upload.single("picture"), newProductRoute);
 app.use("/api/get-product-image", getProductImageRoute);
 app.use("/api/get-product-list", getProductListRoute);
+app.use("/api/validate-repair-order", validateRepairOrderRoute);
 
 // Listen
 let port = process.env.PORT || 4000;
