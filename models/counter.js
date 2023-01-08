@@ -1,18 +1,14 @@
 const mongoose = require('mongoose');
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 const counterSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    value: { type: Number, required: true }
+    value: { type: Number, required: true },
+    lastGenerationDate: { type: Date, default: Date.now }
 });
 
 const Counter = mongoose.model("counter", counterSchema);
 
+// Repair Order ===============================================================================================
 const CreateRepairOrderCounter = async () => {
 
     const counter = await Counter.findOne({ name: "repair-order" });
@@ -27,23 +23,21 @@ const CreateRepairOrderCounter = async () => {
     return true;
 }
 
-const GetCurrentRepairOrderCounterValue = async () => {
+// const GetCurrentRepairOrderCounterValue = async () => {
 
-    console.log("GetCurrentRepairOrderCounterValue");
+//     console.log("GetCurrentRepairOrderCounterValue");
 
-    const counter = await Counter.findOne({ name: "repair-order" });
+//     const counter = await Counter.findOne({ name: "repair-order" });
 
-    if (counter) {
-        return counter.value;
-    }
-    else {
-        return -1;
-    }
-}
+//     if (counter) {
+//         return counter.value;
+//     }
+//     else {
+//         return -1;
+//     }
+// }
 
 const IncrementRepairOrderCounterAndGetNextROID = async (ParamResultCallback) => {
-
-    console.log("IncrementRepairOrderCounter()");
 
     let result = -1;
     Counter.findOne({ name: "repair-order" }, (err, counter) => {
@@ -61,6 +55,53 @@ const IncrementRepairOrderCounterAndGetNextROID = async (ParamResultCallback) =>
     });
 }
 
+// Catering Order ===============================================================================================
+const CreateCateringOrderCounter = async () => {
+
+    const counter = await Counter.findOne({ name: "catering-order" });
+
+    if (counter) {
+        console.log("FALSE : catering-order counter already exists.");
+        return false;
+    }
+
+    await new Counter({ name: "catering-order", value: 1 }).save();
+    console.log("TRUE : catering-order counter created.");
+    return true;
+}
+
+const IncrementCateringOrderCounterAndGetNextCOID = async (ParamResultCallback) => {
+
+    let result = -1;
+    Counter.findOne({ name: "catering-order" }, (err, counter) => {
+        const today = new Date();
+        const genDate = counter.lastGenerationDate;
+        
+        if (sameDay(genDate, today))
+        {
+            result = counter.value + 1;
+            counter.value = result;
+        }
+        else
+        {
+            result = 1;
+            counter.value = 1;
+            counter.lastGenerationDate = today;
+            console.log("Catering order counter reset : New day.");
+        }
+
+
+        counter.save(function (err) {
+            if (err) {
+                console.error('ERROR : ' + err);
+            }
+        });
+
+        ParamResultCallback(result);
+    });
+}
+
+// Helper Functions ===============================================================================================
 function GetYYMM() {
     var d = new Date();
     var month = '' + (d.getMonth() + 1);
@@ -72,7 +113,7 @@ function GetYYMM() {
     return year[2] + year[3] + "-" + month;
 }
 
-function AddZeroes (ParamID) {
+function AddZeroes(ParamID) {
     let result = '' + ParamID;
 
     for (let index = result.length; index < 8; index++) {
@@ -82,4 +123,24 @@ function AddZeroes (ParamID) {
     return result;
 }
 
-module.exports = { Counter, CreateRepairOrderCounter, IncrementRepairOrderCounterAndGetNextROID, GetCurrentRepairOrderCounterValue };
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function sameDay(d1, d2) {
+    console.log("Comparing days : " + d1 + " AND " + d2);
+    return d1.getFullYear() === d2.getFullYear() &&
+        d1.getMonth() === d2.getMonth() &&
+        d1.getDate() === d2.getDate();
+}
+
+// Exports ===============================================================================================
+module.exports = {
+    Counter,
+    CreateRepairOrderCounter,
+    CreateCateringOrderCounter,
+    IncrementRepairOrderCounterAndGetNextROID,
+    IncrementCateringOrderCounterAndGetNextCOID
+};

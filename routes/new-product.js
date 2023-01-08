@@ -8,13 +8,14 @@ router.post("/", async (req, res) => {
     console.log("New Product...");
     
     try {
-        console.log("REQ = " + req);
-        console.log("ITEM NAME = " + req.body.name);
+        // console.log("REQ = " + req);
+        // console.log("ITEM NAME = " + req.body.name);
+        console.log("ITEM ALT NAME = " + req.body.altLangName);
         var img = fs.readFileSync(req.file.path);
-        console.log("PATH = " + req.file.path);
+        // console.log("PATH = " + req.file.path);
         var encode_img = img.toString('base64');
         var final_img = {contentType:req.file.mimetype, data: new Buffer.from(encode_img, 'base64')};
-        await new Product({name: req.body.name, description: req.body.description, price: req.body.price, img: final_img}).save();
+        await new Product({name: req.body.name, altLangName:req.body.altLangName, description: req.body.description, price: req.body.price, img: final_img}).save();
         res.status(200).send({message:"OK"});
     } catch (error) {
         console.log("ERROR : " + error.message);

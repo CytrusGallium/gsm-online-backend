@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 var productSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    altLangName: { type: String, required: false },
     description: { type: String, required: false },
     price: { type: Number, default: 0 },
     sellable: { type: Boolean, default: true },

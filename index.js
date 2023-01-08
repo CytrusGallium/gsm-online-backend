@@ -6,8 +6,9 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const {CreateNewUser} = require('./models/users');
-const {CreateRepairOrderCounter} = require('./models/counter');
+const {CreateRepairOrderCounter, CreateCateringOrderCounter} = require('./models/counter');
 const path = require('path');
+const { CreateCustomerSittingTableInBatch, IfNoCustomerSittingTableDoThis } = require('./models/customer-sitting-table');
 
 // Routes
 // const signupRoute = require('./routes/singup');
@@ -20,12 +21,17 @@ const updateRepairOrderRoute = require('./routes/update-repair-order');
 // const editRepairOrdersRoute = require('./routes/edit-repair-order');
 // const getNextROIDRoute = require('./routes/get-next-ro-id');
 const getRepairOrdersListRoute = require('./routes/get-repair-orders-list');
+const getCustomerSittingTablesListRoute = require('./routes/Customer Sitting Table/get-customer-sitting-tables-list');
 const generateEmptyRepairOrderRoute = require('./routes/generate-empty-repair-order');
+const generateEmptyCateringOrderRoute = require('./routes/Catering Order/generate-empty-catering-order');
 const newProductRoute = require('./routes/new-product');
 const newCategoryRoute = require('./routes/new-category');
 const getProductImageRoute = require('./routes/get-product-image');
 const getProductListRoute = require('./routes/get-product-list');
 const validateRepairOrderRoute = require('./routes/validate-repair-order');
+const getCateringOrderRoute = require('./routes/Catering Order/get-catering-order');
+const updateCateringOrderRoute = require('./routes/Catering Order/update-catering-order');
+const updateCustomerSittingTableRoute = require('./routes/Customer Sitting Table/update-customer-sitting-table');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -61,6 +67,8 @@ db.once('open', () => console.log('Connected to database.'));
 const wasAdminCreated = CreateNewUser("admin", process.env.DEFAULT_ADMIN_PASSWORD);
 console.log("Admin creation result = " + wasAdminCreated);
 CreateRepairOrderCounter();
+CreateCateringOrderCounter();
+IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
 
 // Middleware Setup
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
@@ -77,14 +85,19 @@ app.use("/api/ping", pingRoute);
 // app.use("/api/edit-repair-order", editRepairOrdersRoute);
 // app.use("/api/get-next-ro-id", getNextROIDRoute);
 app.use("/api/get-repair-orders-list", getRepairOrdersListRoute);
+app.use("/api/get-customer-sitting-tables-list", getCustomerSittingTablesListRoute);
 // app.use("/api/get-item-list", /*protect,*/ getItemListRoute);
 app.use("/api/generate-empty-repair-order", generateEmptyRepairOrderRoute);
+app.use("/api/generate-empty-catering-order", generateEmptyCateringOrderRoute);
 app.use("/api/update-repair-order", updateRepairOrderRoute);
 app.use("/api/new-product", upload.single("picture"), newProductRoute);
 app.use("/api/new-category", upload.single("picture"), newCategoryRoute);
 app.use("/api/get-product-image", getProductImageRoute);
 app.use("/api/get-product-list", getProductListRoute);
 app.use("/api/validate-repair-order", validateRepairOrderRoute);
+app.use("/api/get-catering-order", getCateringOrderRoute);
+app.use("/api/update-catering-order", updateCateringOrderRoute);
+app.use("/api/update-customer-sitting-table", updateCustomerSittingTableRoute);
 
 // Listen
 let port = process.env.PORT || 4000;

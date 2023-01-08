@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const mongoose = require('mongoose');
-const { Product } = require("../models/product");
+const { CustomerSittingTable } = require("../../models/customer-sitting-table");
 
 router.get("/", async (req, res) => {
 
-    console.log("Getting product list...");
+    console.log("Getting customer sitting tables list...");
 
     // Prepare search parameters if any
     let findParams = {};
@@ -13,13 +13,9 @@ router.get("/", async (req, res) => {
     //     // console.log("ROID = " + req.query.roid);
     // }
 
-    let selectionParams = { "_id": 1, "name": 1, "price": 1, "altLangName": 1 };
-
     try {
 
-        // Product.find(findParams).sort({ time: 'descending' }).exec((err, result) => {
-        Product.find(findParams, selectionParams).exec((err, result) => {
-            // sleep.sleep(1);
+        CustomerSittingTable.find(findParams).exec((err, result) => {
             res.status(200).send(result);
         });
 
