@@ -7,6 +7,8 @@ var productSchema = new mongoose.Schema({
     price: { type: Number, default: 0 },
     sellable: { type: Boolean, default: true },
     buyable: { type: Boolean, default: true },
+    requirePreparation: { type: Boolean, default: false }, // For example a sandwish
+    category: { type: String, default: "NULL" },
     img:
     {
         data: Buffer,

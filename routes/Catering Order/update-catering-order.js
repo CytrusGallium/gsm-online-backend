@@ -9,6 +9,8 @@ router.post("/", async (req, res) => {
 
         cateringOrder = await CateringOrder.findOne({ _id: id });
 
+        cateringOrder.empty = false;
+
         if (req.body.consumedProducts)
             cateringOrder.consumedProducts = req.body.consumedProducts;
 
@@ -17,8 +19,14 @@ router.post("/", async (req, res) => {
 
         if (req.body.finalized)
         {
-            console.log("FINALIZED = " + req.body.finalized);
+            // console.log("FINALIZED = " + req.body.finalized);
             cateringOrder.finalized = req.body.finalized;
+        }
+
+        if (req.body.totalPrice)
+        {
+            // console.log("FINALIZED = " + req.body.finalized);
+            cateringOrder.totalPrice = req.body.totalPrice;
         }
 
         if (req.body.customerSittingTableID)
