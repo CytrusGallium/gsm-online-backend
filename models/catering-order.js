@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const cateringOrderSchema = new mongoose.Schema({
     time: { type: Date, default: Date.now },
     customerSittingTableID: { type: String, required: false },
-    consumedProducts: { type: Array, "default": [] },
+    // consumedProducts: { type: Array, "default": [] },
+    // consumedProducts: { type: String, required: false },
+    consumedProducts: { type: Object, required: false },
     kitchenOrderIssued: { type: Boolean, default: false },
     totalPrice: { type: Number, default: 0 },
     fulfilledPaiement: { type: Number, default: 0 },
