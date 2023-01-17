@@ -29,6 +29,11 @@ router.post("/", async (req, res) => {
             cateringOrder.totalPrice = req.body.totalPrice;
         }
 
+        if (req.body.fulfilledPaiement)
+        {
+            cateringOrder.fulfilledPaiement = req.body.fulfilledPaiement;
+        }
+
         if (req.body.customerSittingTableID)
             cateringOrder.customerSittingTableID = req.body.customerSittingTableID;
 
