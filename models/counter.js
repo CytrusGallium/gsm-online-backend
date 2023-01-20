@@ -41,7 +41,8 @@ const IncrementRepairOrderCounterAndGetNextROID = async (ParamResultCallback) =>
 
     let result = -1;
     Counter.findOne({ name: "repair-order" }, (err, counter) => {
-        let rand = getRandomInt(1, 5);
+        // let rand = getRandomInt(1, 5);
+        let rand = 1;
         result = counter.value + rand;
         counter.value = result;
 
@@ -51,7 +52,7 @@ const IncrementRepairOrderCounterAndGetNextROID = async (ParamResultCallback) =>
             }
         });
 
-        ParamResultCallback(GetYYMM() + "-" + AddZeroes(result));
+        ParamResultCallback(GetYYMM() + AddZeroes(result));
     });
 }
 
@@ -110,7 +111,8 @@ function GetYYMM() {
     if (month.length < 2)
         month = '0' + month;
 
-    return year[2] + year[3] + "-" + month;
+    // return year[2] + year[3] + "-" + month;
+    return year[2] + year[3] + month;
 }
 
 function AddZeroes(ParamID) {

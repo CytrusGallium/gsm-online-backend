@@ -13,6 +13,21 @@ router.get("/", async (req, res) => {
         findParams = { roid: req.query.roid };
         // console.log("ROID = " + req.query.roid);
     }
+    else if (req.query.customer) {
+        findParams = { customer: req.query.customer };
+        // console.log("CUSTOMER = " + req.query.customer);
+    }
+    else if (req.query.phone) {
+        findParams = { phone: req.query.phone };
+        // console.log("CUSTOMER = " + req.query.customer);
+    }
+    else if (req.query.imei) {
+        findParams = { 'items.imei': req.query.imei };
+        console.log("IMEI = " + req.query.imei);
+    }
+
+    // Not deleted
+    findParams.deleted = false;
 
     try {
 

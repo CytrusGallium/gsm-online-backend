@@ -25,6 +25,8 @@ router.post("/", async (req, res) => {
                 result.locked = req.body.locked;
                 // note
                 result.note = req.body.note;
+                // Items
+                result.items = req.body.items;
 
                 // Save
                 result.save((err, model) => {

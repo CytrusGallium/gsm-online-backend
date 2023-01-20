@@ -36,6 +36,7 @@ const validateRepairOrderRoute = require('./routes/validate-repair-order');
 const getCateringOrderRoute = require('./routes/Catering Order/get-catering-order');
 const updateCateringOrderRoute = require('./routes/Catering Order/update-catering-order');
 const updateCustomerSittingTableRoute = require('./routes/Customer Sitting Table/update-customer-sitting-table');
+const deleteRepairOrderRoute = require('./routes/delete-repair-order');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -106,6 +107,7 @@ app.use("/api/validate-repair-order", validateRepairOrderRoute);
 app.use("/api/get-catering-order", getCateringOrderRoute);
 app.use("/api/update-catering-order", updateCateringOrderRoute);
 app.use("/api/update-customer-sitting-table", updateCustomerSittingTableRoute);
+app.use("/api/delete-repair-order", deleteRepairOrderRoute);
 
 // Listen
 let port = process.env.PORT || 4000;
