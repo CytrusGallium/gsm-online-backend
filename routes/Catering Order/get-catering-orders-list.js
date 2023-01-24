@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
     console.log("Getting catering orders list...");
 
     // Prepare search parameters if any
-    let findParams = {};
+    let findParams = {deleted: 0};
     // if (req.query.roid) {
     //     findParams = { roid: req.query.roid };
     //     // console.log("ROID = " + req.query.roid);
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 
     try {
 
-        CateringOrder.find(findParams).exec((err, result) => {
+        CateringOrder.find(findParams).sort({time: 'descending'}).exec((err, result) => {
             res.status(200).send(result);
         });
 

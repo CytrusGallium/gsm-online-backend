@@ -22,7 +22,8 @@ const repairOrderSchema = new mongoose.Schema({
     primary_imei: { type: String, required: false }, // To facilitate research
     locked: { type: Boolean, default: false },
     empty: { type: Boolean, default: true },
-    note: { type: String, required: false }
+    note: { type: String, required: false },
+    // TODO : Exit Date
 });
 
 const RepairOrder = mongoose.model("repairOrder", repairOrderSchema);
