@@ -23,7 +23,7 @@ const repairOrderSchema = new mongoose.Schema({
     locked: { type: Boolean, default: false },
     empty: { type: Boolean, default: true },
     note: { type: String, required: false },
-    // TODO : Exit Date
+    exitDate: { type: Date, required: false }
 });
 
 const RepairOrder = mongoose.model("repairOrder", repairOrderSchema);

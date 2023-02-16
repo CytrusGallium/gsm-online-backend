@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
         let product;
         // let resultFound = false;
 
-        let selectionParams = { "_id": 1, "name": 1, "price": 1, "altLangName": 1, "category": 1 };
+        let selectionParams = { "_id": 1, "name": 1, "price": 1, "altLangName": 1, "category": 1, "buyable":1, "sellable":1 };
 
         if (req.query.id) {
             console.log("Searching for product by ID...");

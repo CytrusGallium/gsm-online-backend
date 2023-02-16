@@ -8,9 +8,6 @@ router.post("/", async (req, res) => {
     
     try {
 
-        // const roid = req.body.roid;
-        // console.log("ROID = " + req.body.roid);
-
         Product.findOne({ _id: req.body.id }).exec((err, result) => {
             
             // console.log("RESULT = " + JSON.stringify(result));
@@ -25,6 +22,8 @@ router.post("/", async (req, res) => {
             result.description = req.body.description;
             result.price = req.body.price;
             result.category = req.body.category;
+            result.buyable = req.body.buyable;
+            result.sellable = req.body.sellable;
 
             // Save
             result.save((err, model) => {

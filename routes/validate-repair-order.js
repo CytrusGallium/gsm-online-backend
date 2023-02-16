@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { RepairOrder } = require('../models/repair-order.js');
 const sleep = require('sleep');
+const { date } = require("joi");
 
 router.post("/", async (req, res) => {
 
@@ -27,6 +28,8 @@ router.post("/", async (req, res) => {
                 result.note = req.body.note;
                 // Items
                 result.items = req.body.items;
+                // Exit date
+                result.exitDate = Date.now;
 
                 // Save
                 result.save((err, model) => {

@@ -10,20 +10,44 @@ router.post("/", async (req, res) => {
 
         customerSittingTable = await CustomerSittingTable.findOne({ _id: id });
 
-        console.log("CST = " + JSON.stringify(customerSittingTable));
+        // Check if table already occupied, if so do nothing an let the client know it's already occupied
+        if (req.body.occupied != null && req.body.occupied == true && customerSittingTable.occupied == true) {
+            console.log("CST Already Occupied : " + JSON.stringify(customerSittingTable));
+            // Respond
+            res.status(200).send("ALREADY_OCCUPIED");
+        }
+        // Occupy table if not occupied
+        else if (req.body.occupied != null && req.body.occupied == true && customerSittingTable.occupied == false) {
+            console.log("CST occupation on the way : " + JSON.stringify(customerSittingTable));
 
-        if (req.body.occupied != null) {
+            // Occupy
             customerSittingTable.occupied = req.body.occupied;
+
+            // Set Catering Order
+            if (req.body.cateringOrder != null) {
+                customerSittingTable.cateringOrder = req.body.cateringOrder;
+            }
+
+            await customerSittingTable.save();
+
+            // Respond
+            res.status(200).send("OK");
         }
-        
-        if (req.body.cateringOrder != null) {
-            customerSittingTable.cateringOrder = req.body.cateringOrder;
+        // Free table if occupied
+        else if (req.body.occupied != null && req.body.occupied == false && customerSittingTable.occupied == true) {
+            console.log("CST freeing on the way : " + JSON.stringify(customerSittingTable));
+
+            // Free the table
+            customerSittingTable.occupied = false;
+            customerSittingTable.cateringOrder = '';
+
+            await customerSittingTable.save();
+
+            // Respond
+            res.status(200).send("OK");
         }
 
-        await customerSittingTable.save();
 
-        // Respond
-        res.status(200).send("OK");
 
     } catch (error) {
         console.log("ERROR : " + error.message);

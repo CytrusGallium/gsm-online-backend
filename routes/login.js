@@ -26,7 +26,8 @@ router.post("/", async (req,res) => {
                     _id: user.id,
                     name: user.name,
                     email: user.email,
-                    token: generateAuthToken(user._id)
+                    token: generateAuthToken(user._id),
+                    level: user.level
                 });
             }
             else

@@ -5,10 +5,19 @@ const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const {CreateNewUser} = require('./models/users');
-const {CreateRepairOrderCounter, CreateCateringOrderCounter} = require('./models/counter');
+const { CreateNewUser } = require('./models/users');
+const { CreateRepairOrderCounter, CreateCateringOrderCounter } = require('./models/counter');
 const path = require('path');
 const { CreateCustomerSittingTableInBatch, IfNoCustomerSittingTableDoThis } = require('./models/customer-sitting-table');
+// const RequestLogger = require('./Middleware/RequestLogger');
+// import { myLogger } from './Middleware/RequestLogger.js';
+const { LogHttpRequest } = require('./Middleware/RequestLogger');
+
+// const myLogger = function (req, res, next) {
+//     console.log('Request URL:', req.originalUrl);
+//     console.log('Request Type:', req.method);
+//     next();
+// };
 
 // Routes
 // const signupRoute = require('./routes/singup');
@@ -30,7 +39,7 @@ const updateProductRoute = require('./routes/Product/update-product');
 const newCategoryRoute = require('./routes/Category/new-category');
 const getCategoryListRoute = require('./routes/Category/get-category-list');
 const getProductImageRoute = require('./routes/get-product-image');
-const getProductListRoute = require('./routes/get-product-list');
+const getProductListRoute = require('./routes/Product/get-product-list');
 const getCateringOrdersListRoute = require('./routes/Catering Order/get-catering-orders-list');
 const validateRepairOrderRoute = require('./routes/validate-repair-order');
 const getCateringOrderRoute = require('./routes/Catering Order/get-catering-order');
@@ -38,12 +47,23 @@ const updateCateringOrderRoute = require('./routes/Catering Order/update-caterin
 const updateCustomerSittingTableRoute = require('./routes/Customer Sitting Table/update-customer-sitting-table');
 const deleteRepairOrderRoute = require('./routes/delete-repair-order');
 const deleteCateringOrderRoute = require('./routes/Catering Order/delete-catering-order');
+const getReceptionListRoute = require('./routes/Reception/get-reception-list');
+const getReceptionListReadyRoute = require('./routes/Reception/get-reception-list-ready');
+const getReceptionRoute = require('./routes/Reception/get-reception');
+const newReceptionRoute = require('./routes/Reception/new-reception');
+const performReceptionStorageRoute = require('./routes/Reception/perform-reception-storage');
+const updateReceptionRoute = require('./routes/Reception/update-reception');
+const newProviderRoute = require('./routes/Provider/new-provider');
+const getProviderListRoute = require('./routes/Provider/get-provider-list');
+const getActiveTakeoutOrderListRoute = require('./routes/Catering Order/get-active-takeout-order-list');
+const getUserListRoute = require('./routes/User/get-user-list');
+const newUserRoute = require('./routes/User/new-user');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'Uploads' ) // Error is null here, Uploads is the name of the folder where the received files will be stored.
+        cb(null, 'Uploads') // Error is null here, Uploads is the name of the folder where the received files will be stored.
     },
     filename: (req, file, cb) => {
         console.log("FILE = " + file);
@@ -52,7 +72,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload = multer({storage: storage}) // This is the Middleware object
+const upload = multer({ storage: storage }) // This is the Middleware object
 // Multer END Config -------------------------------------------------------------------------------------------------------------
 
 // Middleware
@@ -70,13 +90,16 @@ db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database.'));
 
 // Initialize some tables
-const wasAdminCreated = CreateNewUser("admin", process.env.DEFAULT_ADMIN_PASSWORD);
+const wasAdminCreated = CreateNewUser("admin", process.env.DEFAULT_ADMIN_PASSWORD, "ADMIN");
 console.log("Admin creation result = " + wasAdminCreated);
 CreateRepairOrderCounter();
 CreateCateringOrderCounter();
 IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
 
 // Middleware Setup
+// app.use(RequestLogger);
+// app.use(LogHttpRequest);
+app.all('*', LogHttpRequest);
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(express.json());
 app.use(cors());
@@ -110,6 +133,17 @@ app.use("/api/update-catering-order", updateCateringOrderRoute);
 app.use("/api/update-customer-sitting-table", updateCustomerSittingTableRoute);
 app.use("/api/delete-repair-order", deleteRepairOrderRoute);
 app.use("/api/delete-catering-order", deleteCateringOrderRoute);
+app.use("/api/get-reception-list", getReceptionListRoute);
+app.use("/api/get-reception-list-ready", getReceptionListReadyRoute);
+app.use("/api/get-reception", getReceptionRoute);
+app.use("/api/new-provider", newProviderRoute);
+app.use("/api/get-provider-list", getProviderListRoute);
+app.use("/api/new-reception", newReceptionRoute);
+app.use("/api/perform-reception-storage", performReceptionStorageRoute);
+app.use("/api/update-reception", updateReceptionRoute);
+app.use("/api/get-active-takeout-order-list", getActiveTakeoutOrderListRoute);
+app.use("/api/get-user-list", getUserListRoute);
+app.use("/api/new-user", newUserRoute);
 
 // Listen
 let port = process.env.PORT || 4000;

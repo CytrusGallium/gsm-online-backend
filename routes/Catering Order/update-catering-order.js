@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { CateringOrder } = require("../../models/catering-order");
+const { DecrementProductAmount } = require("../../models/product");
 
 router.post("/", async (req, res) => {
     try {
@@ -17,20 +18,34 @@ router.post("/", async (req, res) => {
         if (req.body.kitchenOrderIssued)
             cateringOrder.kitchenOrderIssued = req.body.kitchenOrderIssued;
 
-        if (req.body.finalized)
-        {
-            // console.log("FINALIZED = " + req.body.finalized);
+        if (req.body.finalized) {
+            // Check if already finalized
+            if (cateringOrder.finalized == true && req.body.finalized == true) {
+                // Prevent re-finalization
+                console.log("Rejecting Re-Finalization...");
+                res.status(200).send("REJECTED");
+                return;
+            }
+            else if (cateringOrder.finalized == false && req.body.finalized == true) {
+                // Finalization (Must perform product unstockage)
+                console.log("Performing Finalization and Unstockage...");
+                console.log("Unstocking : " + JSON.stringify(cateringOrder.consumedProducts));
+                const productKeys = Object.keys(cateringOrder.consumedProducts);
+
+                for (const k of productKeys) {
+                    await DecrementProductAmount(k, cateringOrder.consumedProducts[k].amount);
+                }
+            }
+
             cateringOrder.finalized = req.body.finalized;
         }
 
-        if (req.body.totalPrice)
-        {
+        if (req.body.totalPrice) {
             // console.log("FINALIZED = " + req.body.finalized);
             cateringOrder.totalPrice = req.body.totalPrice;
         }
 
-        if (req.body.fulfilledPaiement)
-        {
+        if (req.body.fulfilledPaiement) {
             cateringOrder.fulfilledPaiement = req.body.fulfilledPaiement;
         }
 
