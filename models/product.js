@@ -23,11 +23,14 @@ const DecrementProductAmount = (ParamProductID, ParamAmount) => {
 
         try {
             let p = await Product.findOne({ _id: ParamProductID });
-            let newAmount = Number(p.availableAmount) - Number(ParamAmount);
-            p.availableAmount = newAmount;
-            p.save();
-            // await Product.findByIdAndUpdate(ParamProductID, { availableAmount: { $inc: 1 } });
-            resolve(true);
+            if (p) {
+                let newAmount = Number(p.availableAmount) - Number(ParamAmount);
+                p.availableAmount = newAmount;
+                p.save();
+                resolve(true);
+            }
+            else
+                resolve(false);
         } catch (error) {
             console.log("ERROR : " + error.message);
             resolve(false);

@@ -53,11 +53,21 @@ const getReceptionRoute = require('./routes/Reception/get-reception');
 const newReceptionRoute = require('./routes/Reception/new-reception');
 const performReceptionStorageRoute = require('./routes/Reception/perform-reception-storage');
 const updateReceptionRoute = require('./routes/Reception/update-reception');
+const getReceptionTotalRoute = require('./routes/Reception/get-reception-total');
 const newProviderRoute = require('./routes/Provider/new-provider');
 const getProviderListRoute = require('./routes/Provider/get-provider-list');
 const getActiveTakeoutOrderListRoute = require('./routes/Catering Order/get-active-takeout-order-list');
 const getUserListRoute = require('./routes/User/get-user-list');
 const newUserRoute = require('./routes/User/new-user');
+const newEmployeeRoute = require('./routes/Employee/new-employee');
+const getEmployeeListRoute = require('./routes/Employee/get-employee-list');
+const newEmployeeClockingEventRoute = require('./routes/Employee Clocking Event/new-employee-clocking-event');
+const getEmployeeClockingEventListRoute = require('./routes/Employee Clocking Event/get-employee-clocking-event-list');
+const addFeeTypeRoute = require('./routes/Fee Type/add-fee-type');
+const getFeeTypeListRoute = require('./routes/Fee Type/get-fee-type-list');
+const addFeeRoute = require('./routes/Fee/add-fee');
+const getFeeListRoute = require('./routes/Fee/get-fee-list');
+const getFeeStatsRoute = require('./routes/Fee/get-fee-stats');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -100,6 +110,7 @@ IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
 // app.use(RequestLogger);
 // app.use(LogHttpRequest);
 app.all('*', LogHttpRequest);
+// app.use(function(req,res,next){setTimeout(next,1000)});
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(express.json());
 app.use(cors());
@@ -136,6 +147,7 @@ app.use("/api/delete-catering-order", deleteCateringOrderRoute);
 app.use("/api/get-reception-list", getReceptionListRoute);
 app.use("/api/get-reception-list-ready", getReceptionListReadyRoute);
 app.use("/api/get-reception", getReceptionRoute);
+app.use("/api/get-reception-total", getReceptionTotalRoute);
 app.use("/api/new-provider", newProviderRoute);
 app.use("/api/get-provider-list", getProviderListRoute);
 app.use("/api/new-reception", newReceptionRoute);
@@ -144,6 +156,15 @@ app.use("/api/update-reception", updateReceptionRoute);
 app.use("/api/get-active-takeout-order-list", getActiveTakeoutOrderListRoute);
 app.use("/api/get-user-list", getUserListRoute);
 app.use("/api/new-user", newUserRoute);
+app.use("/api/new-employee", newEmployeeRoute);
+app.use("/api/get-employee-list", getEmployeeListRoute);
+app.use("/api/new-employee-clocking-event", newEmployeeClockingEventRoute);
+app.use("/api/get-employee-clocking-event-list", getEmployeeClockingEventListRoute);
+app.use("/api/add-fee-type", addFeeTypeRoute);
+app.use("/api/get-fee-type-list", getFeeTypeListRoute);
+app.use("/api/add-fee", addFeeRoute);
+app.use("/api/get-fee-list", getFeeListRoute);
+app.use("/api/get-fee-stats", getFeeStatsRoute);
 
 // Listen
 let port = process.env.PORT || 4000;

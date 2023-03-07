@@ -29,7 +29,8 @@ router.post("/", async (req, res) => {
                 // Items
                 result.items = req.body.items;
                 // Exit date
-                result.exitDate = Date.now;
+                result.exitDate = Date.now();
+                console.log("Exit Date = " + result.exitDate);
 
                 // Save
                 result.save((err, model) => {

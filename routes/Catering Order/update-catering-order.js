@@ -32,9 +32,16 @@ router.post("/", async (req, res) => {
                 console.log("Unstocking : " + JSON.stringify(cateringOrder.consumedProducts));
                 const productKeys = Object.keys(cateringOrder.consumedProducts);
 
+                // ...
                 for (const k of productKeys) {
-                    await DecrementProductAmount(k, cateringOrder.consumedProducts[k].amount);
+                    if (cateringOrder.consumedProducts[k].custom)
+                        console.log("IGNORE_MISC_PROD_DESTOCK");
+                    else
+                        await DecrementProductAmount(k, cateringOrder.consumedProducts[k].amount);
                 }
+
+                // ...
+                cateringOrder.finalizationTime = Date.now();
             }
 
             cateringOrder.finalized = req.body.finalized;

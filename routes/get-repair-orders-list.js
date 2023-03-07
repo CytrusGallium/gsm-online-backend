@@ -45,7 +45,7 @@ router.get("/", async (req, res) => {
 const PrepareDataForTable = (ParamQueryResult) => {
     let result = [];
     ParamQueryResult.forEach(ro => {
-        result.push({ roid: ro.roid, time: ro.time, customer: ro.customer, phone: ro.phone, items: ro.items, locked: ro.locked });
+        result.push({ roid: ro.roid, time: ro.time, customer: ro.customer, phone: ro.phone, items: ro.items, locked: ro.locked, exitDate:ro.exitDate });
     });
     return result;
 }

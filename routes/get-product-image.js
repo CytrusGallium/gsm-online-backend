@@ -5,7 +5,7 @@ const sleep = require('sleep');
 
 router.get("/", async (req, res) => {
     try {
-        console.log("Getting product picture : " + req.query.id + "...");
+        // console.log("Getting product picture : " + req.query.id + "...");
         const product = await Product.findById(req.query.id);
 
         if (product) {

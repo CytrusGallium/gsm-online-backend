@@ -12,9 +12,12 @@ router.post("/", async (req, res) => {
 
         // Check if table already occupied, if so do nothing an let the client know it's already occupied
         if (req.body.occupied != null && req.body.occupied == true && customerSittingTable.occupied == true) {
-            console.log("CST Already Occupied : " + JSON.stringify(customerSittingTable));
-            // Respond
-            res.status(200).send("ALREADY_OCCUPIED");
+            if (customerSittingTable.cateringOrder != req.body.cateringOrder)
+            {
+                console.log("CST Already Occupied : " + JSON.stringify(customerSittingTable));
+                // Respond
+                res.status(200).send("ALREADY_OCCUPIED");
+            }
         }
         // Occupy table if not occupied
         else if (req.body.occupied != null && req.body.occupied == true && customerSittingTable.occupied == false) {

@@ -13,6 +13,7 @@ const cateringOrderSchema = new mongoose.Schema({
     version: { type: Number, default: 1 },
     empty: { type: Boolean, default: true },
     finalized: { type: Boolean, default: false }, // After payment
+    finalizationTime: { type: Date, required: false },
     locked: { type: Boolean, default: false },
     deleted: { type: Boolean, default: false },
     note: { type: String, required: false }
