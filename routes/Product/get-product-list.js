@@ -9,7 +9,11 @@ router.get("/", async (req, res) => {
 
     // Prepare search parameters if any
     let findParams = {};
-
+    
+    if (req.query.ignoreDeleted) {
+        findParams.$or = [ { deleted: false }, { deleted: null } ];
+    }
+    
     if (req.query.sellable) {
         findParams.sellable = req.query.sellable;
     }

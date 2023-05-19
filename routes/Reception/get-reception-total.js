@@ -9,6 +9,14 @@ router.get("/", async (req, res) => {
     let findParams = { deleted: false };
     let selectionParams = { totalPrice:1 };
 
+    // Range
+    if (req.query.start && req.query.end) {
+        const startDate = new Date(req.query.start);
+        const endDate = new Date(req.query.end);
+
+        findParams.time = { $gte: startDate, $lte: endDate };
+    }
+
     try {
 
         let total = 0;
@@ -17,9 +25,10 @@ router.get("/", async (req, res) => {
             result.forEach(r => {
                 total += r.totalPrice;
             });
+            
+            return res.status(200).send({total:total});
         });
         
-        return res.status(200).send({total:total});
 
     } catch (error) {
         console.log("ERROR : " + error.message);

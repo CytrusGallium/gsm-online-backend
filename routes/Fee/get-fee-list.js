@@ -7,6 +7,11 @@ router.get("/", async (req, res) => {
 
     let pipeline = [
         {
+            $match: {
+                feeTypeID: { $ne: 'NULL' }
+            }
+        },
+        {
             $lookup:
             {
                 from: "feetypes",

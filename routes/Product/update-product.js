@@ -1,20 +1,25 @@
 const router = require("express").Router();
 const { Product } = require('../../models/product');
-// const sleep = require('sleep');
+const fs = require('fs');
 
 router.post("/", async (req, res) => {
-    
+
     console.log("Updating product : " + req.body.id);
-    
+
     try {
 
+        // Picture Check
+        var finalImage;
+        var pictureFound = false;
+
+        if (req.file && req.file.path) {
+            const img = fs.readFileSync(req.file.path);
+            const encode_img = img.toString('base64');
+            finalImage = { contentType: req.file.mimetype, data: new Buffer.from(encode_img, 'base64') };
+            pictureFound = true;
+        }
+
         Product.findOne({ _id: req.body.id }).exec((err, result) => {
-            
-            // console.log("RESULT = " + JSON.stringify(result));
-            
-            // Update version
-            // let oldVersion = result.version;
-            // result.version = oldVersion + 1;
 
             // Update potential changes
             result.name = req.body.name;
@@ -24,6 +29,10 @@ router.post("/", async (req, res) => {
             result.category = req.body.category;
             result.buyable = req.body.buyable;
             result.sellable = req.body.sellable;
+            result.barcode = req.body.barcode;
+
+            if (pictureFound)
+                result.img = finalImage;
 
             // Save
             result.save((err, model) => {

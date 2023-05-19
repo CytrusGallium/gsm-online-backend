@@ -9,15 +9,62 @@ const { CreateNewUser } = require('./models/users');
 const { CreateRepairOrderCounter, CreateCateringOrderCounter } = require('./models/counter');
 const path = require('path');
 const { CreateCustomerSittingTableInBatch, IfNoCustomerSittingTableDoThis } = require('./models/customer-sitting-table');
-// const RequestLogger = require('./Middleware/RequestLogger');
-// import { myLogger } from './Middleware/RequestLogger.js';
 const { LogHttpRequest } = require('./Middleware/RequestLogger');
+const WebSocket = require('ws');
+const net = require('net');
 
-// const myLogger = function (req, res, next) {
-//     console.log('Request URL:', req.originalUrl);
-//     console.log('Request Type:', req.method);
-//     next();
-// };
+// ==========================================================================================
+// Mizzapp Bridge
+// ==========================================================================================
+try {
+    const tcpClient = net.createConnection({ port: 33333 }, () => {
+        console.log('connected to server!');
+        tcpClient.write('hello server\r\n');
+
+        // ==================================================================================
+        // Web Socket
+        // ==================================================================================
+        const webSocketServer = new WebSocket.Server({ port: 44444 });
+        let sockets = [];
+        webSocketServer.on('connection', (socket) => {
+            sockets.push(socket);
+            // socket.send("Hello, Client !");
+            // When you receive a message, send that message to every socket.
+            socket.on('message', (msg) => {
+                // sockets.forEach(s => s.send(msg));
+                console.log("MSG = " + msg);
+            });
+            // When a socket closes, or disconnects, remove it from the array.
+            socket.on('close', () => {
+                sockets = sockets.filter(s => s !== socket);
+            });
+        });
+
+        tcpClient.on('data', (data) => {
+            console.log("DATA from Mizzapp : " + data.toString());
+            // tcpClient.end();
+            sockets.forEach((s) => {
+                s.send(data.toString());
+            });
+        });
+        // Websocket End =====================================================================
+    });
+
+    tcpClient.on('error', (err) => {
+        console.error("Error JSON : " + JSON.stringify(err));
+    });
+
+
+
+    tcpClient.on('end', () => {
+        console.log('disconnected from server');
+    });
+} catch (error) {
+    console.log("ERR");
+}
+// ==========================================================================================
+// Mizzapp Bridge END =======================================================================
+// ==========================================================================================
 
 // Routes
 // const signupRoute = require('./routes/singup');
@@ -26,7 +73,7 @@ const loginRoute = require('./routes/login');
 const pingRoute = require('./routes/ping');
 const updateRepairOrderRoute = require('./routes/update-repair-order');
 // const addRepairOrdersRoute = require('./routes/add-repair-order');
-// const getRepairOrdersRoute = require('./routes/get-repair-order');
+const getRepairOrderRoute = require('./routes/get-repair-order');
 // const editRepairOrdersRoute = require('./routes/edit-repair-order');
 // const getNextROIDRoute = require('./routes/get-next-ro-id');
 const getRepairOrdersListRoute = require('./routes/get-repair-orders-list');
@@ -68,6 +115,11 @@ const getFeeTypeListRoute = require('./routes/Fee Type/get-fee-type-list');
 const addFeeRoute = require('./routes/Fee/add-fee');
 const getFeeListRoute = require('./routes/Fee/get-fee-list');
 const getFeeStatsRoute = require('./routes/Fee/get-fee-stats');
+const getDatabaseRoute = require('./routes/Database/get-database');
+const installDatabaseRoute = require('./routes/Database/install-database');
+const getRoListXlsRoute = require('./routes/Repair Order/get-ro-list-xls');
+const roStatsRoute = require('./routes/Repair Order/ro-stats');
+const deleteProductRoute = require('./routes/Product/delete-product');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -107,8 +159,6 @@ CreateCateringOrderCounter();
 IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
 
 // Middleware Setup
-// app.use(RequestLogger);
-// app.use(LogHttpRequest);
 app.all('*', LogHttpRequest);
 // app.use(function(req,res,next){setTimeout(next,1000)});
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
@@ -121,7 +171,7 @@ app.use("/api/login", loginRoute);
 // app.use("/api/test", testRoute);
 app.use("/api/ping", pingRoute);
 // app.use("/api/add-repair-order", addRepairOrdersRoute);
-// app.use("/api/get-repair-order", getRepairOrdersRoute);
+app.use("/api/get-repair-order", getRepairOrderRoute);
 // app.use("/api/edit-repair-order", editRepairOrdersRoute);
 // app.use("/api/get-next-ro-id", getNextROIDRoute);
 app.use("/api/get-repair-orders-list", getRepairOrdersListRoute);
@@ -132,7 +182,7 @@ app.use("/api/generate-empty-catering-order", generateEmptyCateringOrderRoute);
 app.use("/api/update-repair-order", updateRepairOrderRoute);
 app.use("/api/new-product", upload.single("picture"), newProductRoute);
 app.use("/api/get-product", getProductRoute);
-app.use("/api/update-product", updateProductRoute);
+app.use("/api/update-product", upload.single("picture"), updateProductRoute);
 app.use("/api/new-category", upload.single("picture"), newCategoryRoute);
 app.use("/api/get-category-list", getCategoryListRoute);
 app.use("/api/get-product-image", getProductImageRoute);
@@ -165,6 +215,11 @@ app.use("/api/get-fee-type-list", getFeeTypeListRoute);
 app.use("/api/add-fee", addFeeRoute);
 app.use("/api/get-fee-list", getFeeListRoute);
 app.use("/api/get-fee-stats", getFeeStatsRoute);
+app.use("/api/get-database", getDatabaseRoute);
+app.use("/api/install-database", upload.single("file"), installDatabaseRoute);
+app.use("/api/get-ro-list-xls", getRoListXlsRoute);
+app.use("/api/ro-stats", roStatsRoute);
+app.use("/api/delete-product", deleteProductRoute);
 
 // Listen
 let port = process.env.PORT || 4000;

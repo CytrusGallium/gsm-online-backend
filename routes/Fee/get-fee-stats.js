@@ -10,6 +10,14 @@ router.get("/", async (req, res) => {
     let findParams = {};
     let selectionParams = {};
 
+    // Range
+    if (req.query.start && req.query.end) {
+        const startDate = new Date(req.query.start);
+        const endDate = new Date(req.query.end);
+
+        findParams.time = { $gte: startDate, $lte: endDate };
+    }
+
     try {
 
         const result = await Fee.find(findParams, selectionParams);
@@ -19,6 +27,10 @@ router.get("/", async (req, res) => {
         let totalPerFeeTypeReady = [];
 
         for (const f of result) {
+
+            if (f.feeTypeID == null || f.feeTypeID === 'NULL')
+                continue;
+
             total += Number(f.amount);
 
             const ft = await GetFeeTypeByID(f.feeTypeID);
@@ -41,7 +53,7 @@ router.get("/", async (req, res) => {
             }
         }
 
-        const sorted = totalPerFeeTypeReady.sort(({data:a}, {data:b}) => b-a);
+        const sorted = totalPerFeeTypeReady.sort(({ data: a }, { data: b }) => b - a);
 
         return res.status(200).send({ total: total, totalPerFeeType: totalPerFeeType, totalPerFeeTypeReady: sorted });
 

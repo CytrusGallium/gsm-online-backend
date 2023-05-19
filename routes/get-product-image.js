@@ -2,6 +2,7 @@ const router = require("express").Router();
 const mongoose = require('mongoose');
 const { Product } = require('../models/product');
 const sleep = require('sleep');
+const fs = require('fs').promises;
 
 router.get("/", async (req, res) => {
     try {
@@ -9,10 +10,24 @@ router.get("/", async (req, res) => {
         const product = await Product.findById(req.query.id);
 
         if (product) {
-            let img = product.img;
-            res.setHeader('content-type', img.contentType);
-            // sleep.sleep(0.1);
-            res.status(200).send(img.data);
+            let img;
+            let contentType;
+
+            if (product.img) {
+                if (product.img.contentType) {
+                    img = product.img.data;
+                    contentType = product.img.contentType;
+                }
+                else {
+                    console.log("NO IMG MARK");
+                    img = await fs.readFile("image-not-found.webp");
+                    contentType = "image/webp";
+                }
+            }
+
+            res.setHeader('content-type', contentType);
+            res.status(200).send(img);
+            // res.status(200).send(img.data);
         }
     } catch (error) {
         console.log("ERROR : " + error.message);

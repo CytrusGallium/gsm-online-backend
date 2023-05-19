@@ -10,11 +10,14 @@ var productSchema = new mongoose.Schema({
     requirePreparation: { type: Boolean, default: false }, // For example a sandwish requires preparation in the kitchen, while a bottle of water does not need prepartion because we bought it from the store.
     category: { type: String, default: "NULL" },
     availableAmount: { type: Number, default: 0 },
+    mizzappID: { type: String, required: false },
     img:
     {
         data: Buffer,
         contentType: String
-    }
+    },
+    barcode: { type: String, required: false },
+    deleted: { type: Boolean, default: false }
 });
 
 const DecrementProductAmount = (ParamProductID, ParamAmount) => {
