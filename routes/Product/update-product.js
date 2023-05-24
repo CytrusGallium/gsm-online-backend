@@ -30,6 +30,7 @@ router.post("/", async (req, res) => {
             result.buyable = req.body.buyable;
             result.sellable = req.body.sellable;
             result.barcode = req.body.barcode;
+            result.preparationDuration = req.body.preparationDuration;
 
             if (pictureFound)
                 result.img = finalImage;

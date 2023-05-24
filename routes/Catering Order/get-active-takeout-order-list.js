@@ -8,16 +8,10 @@ router.get("/", async (req, res) => {
 
     // Prepare search parameters if any
     let findParams = {deleted: false, empty:false, customerSittingTableID:{ $exists : false }, finalized:false};
-    // if (req.query.roid) {
-    //     findParams = { roid: req.query.roid };
-    //     // console.log("ROID = " + req.query.roid);
-    // }
-
-    // let selectionParams = { "_id": 1, "name": 1 };
 
     try {
 
-        CateringOrder.find(findParams).sort({time: 'descending'}).exec((err, result) => {
+        CateringOrder.find(findParams).sort({time: 1}).exec((err, result) => {
             res.status(200).send(result);
         });
 

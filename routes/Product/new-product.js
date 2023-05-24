@@ -24,7 +24,8 @@ router.post("/", async (req, res) => {
             img: finalImage,
             category: req.body.category,
             barcode: req.body.barcode,
-            mizzappID: req.body.mizzappID
+            mizzappID: req.body.mizzappID,
+            preparationDuration : req.body.preparationDuration
         }).save();
 
         res.status(200).send({ message: "OK" });

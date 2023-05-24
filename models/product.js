@@ -17,7 +17,8 @@ var productSchema = new mongoose.Schema({
         contentType: String
     },
     barcode: { type: String, required: false },
-    deleted: { type: Boolean, default: false }
+    deleted: { type: Boolean, default: false },
+    preparationDuration: { type: Number, default: 0 }
 });
 
 const DecrementProductAmount = (ParamProductID, ParamAmount) => {

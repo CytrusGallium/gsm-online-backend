@@ -16,7 +16,8 @@ router.get("/", async (req, res) => {
             "buyable": 1,
             "sellable": 1,
             "barcode": 1,
-            "mizzappID": 1
+            "mizzappID": 1,
+            "preparationDuration" : 1
         };
 
         if (req.query.id) {

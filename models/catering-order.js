@@ -16,7 +16,9 @@ const cateringOrderSchema = new mongoose.Schema({
     finalizationTime: { type: Date, required: false },
     locked: { type: Boolean, default: false },
     deleted: { type: Boolean, default: false },
-    note: { type: String, required: false }
+    note: { type: String, required: false },
+    kitchenOrderTime: { type: Date, required: false },
+    preparationDuration: { type: Number, default: 0 }
 });
 
 const CateringOrder = mongoose.model("cateringOrder", cateringOrderSchema);

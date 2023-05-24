@@ -15,8 +15,22 @@ router.post("/", async (req, res) => {
         if (req.body.consumedProducts)
             cateringOrder.consumedProducts = req.body.consumedProducts;
 
-        if (req.body.kitchenOrderIssued)
-            cateringOrder.kitchenOrderIssued = req.body.kitchenOrderIssued;
+        if (req.body.kitchenOrderIssued) {
+
+            // Kitchen order just performed ?
+            if (cateringOrder.kitchenOrderIssued == false) {
+                cateringOrder.kitchenOrderTime = Date.now();
+                cateringOrder.kitchenOrderIssued = true;
+            }
+            // else {
+
+            //     cateringOrder.kitchenOrderIssued = req.body.kitchenOrderIssued;
+            // }
+
+        }
+
+        if (req.body.preparationDuration)
+            cateringOrder.preparationDuration = req.body.preparationDuration;
 
         if (req.body.finalized) {
             // Check if already finalized

@@ -9,11 +9,11 @@ router.get("/", async (req, res) => {
 
     // Prepare search parameters if any
     let findParams = {};
-    
+
     if (req.query.ignoreDeleted) {
-        findParams.$or = [ { deleted: false }, { deleted: null } ];
+        findParams.$or = [{ deleted: false }, { deleted: null }];
     }
-    
+
     if (req.query.sellable) {
         findParams.sellable = req.query.sellable;
     }
@@ -22,7 +22,17 @@ router.get("/", async (req, res) => {
         findParams.buyable = req.query.buyable;
     }
 
-    let selectionParams = { "_id": 1, "name": 1, "price": 1, "altLangName": 1, "category": 1, "buyable": 1, "sellable": 1, "availableAmount":1 };
+    let selectionParams = {
+        "_id": 1,
+        "name": 1,
+        "price": 1,
+        "altLangName": 1,
+        "category": 1,
+        "buyable": 1,
+        "sellable": 1,
+        "availableAmount": 1,
+        "preparationDuration": 1
+    };
 
     try {
 
@@ -42,7 +52,8 @@ router.get("/", async (req, res) => {
                         category: (req.query.resolveCategoryID ? categoryList[prod.category] : prod.category),
                         "buyable": prod.buyable,
                         "sellable": prod.sellable,
-                        "availableAmount": prod.availableAmount
+                        "availableAmount": prod.availableAmount,
+                        "preparationDuration" : prod.preparationDuration
                     });
                 else
                     finalResult.push({
@@ -53,7 +64,8 @@ router.get("/", async (req, res) => {
                         "category": (req.query.resolveCategoryID ? "?" : prod.category),
                         "buyable": prod.buyable,
                         "sellable": prod.sellable,
-                        "availableAmount": prod.availableAmount
+                        "availableAmount": prod.availableAmount,
+                        "preparationDuration" : prod.preparationDuration
                     });
             });
 
