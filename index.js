@@ -76,9 +76,9 @@ const updateRepairOrderRoute = require('./routes/update-repair-order');
 const getRepairOrderRoute = require('./routes/get-repair-order');
 // const editRepairOrdersRoute = require('./routes/edit-repair-order');
 // const getNextROIDRoute = require('./routes/get-next-ro-id');
-const getRepairOrdersListRoute = require('./routes/get-repair-orders-list');
+const getRepairOrdersListRoute = require('./routes/Repair Order/get-repair-orders-list');
 const getCustomerSittingTablesListRoute = require('./routes/Customer Sitting Table/get-customer-sitting-tables-list');
-const generateEmptyRepairOrderRoute = require('./routes/generate-empty-repair-order');
+const generateEmptyRepairOrderRoute = require('./routes/Repair Order/generate-empty-repair-order');
 const generateEmptyCateringOrderRoute = require('./routes/Catering Order/generate-empty-catering-order');
 const newProductRoute = require('./routes/Product/new-product');
 const getProductRoute = require('./routes/Product/get-product');
@@ -120,6 +120,7 @@ const installDatabaseRoute = require('./routes/Database/install-database');
 const getRoListXlsRoute = require('./routes/Repair Order/get-ro-list-xls');
 const roStatsRoute = require('./routes/Repair Order/ro-stats');
 const deleteProductRoute = require('./routes/Product/delete-product');
+const getHttpRequestlog = require('./routes/Logs/get-http-request-log');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -159,7 +160,7 @@ CreateCateringOrderCounter();
 IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
 
 // Middleware Setup
-app.all('*', LogHttpRequest);
+// app.all('*', LogHttpRequest);
 // app.use(function(req,res,next){setTimeout(next,1000)});
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(express.json());
@@ -179,7 +180,7 @@ app.use("/api/get-customer-sitting-tables-list", getCustomerSittingTablesListRou
 // app.use("/api/get-item-list", /*protect,*/ getItemListRoute);
 app.use("/api/generate-empty-repair-order", generateEmptyRepairOrderRoute);
 app.use("/api/generate-empty-catering-order", generateEmptyCateringOrderRoute);
-app.use("/api/update-repair-order", updateRepairOrderRoute);
+app.use("/api/update-repair-order", LogHttpRequest, updateRepairOrderRoute);
 app.use("/api/new-product", upload.single("picture"), newProductRoute);
 app.use("/api/get-product", getProductRoute);
 app.use("/api/update-product", upload.single("picture"), updateProductRoute);
@@ -220,6 +221,7 @@ app.use("/api/install-database", upload.single("file"), installDatabaseRoute);
 app.use("/api/get-ro-list-xls", getRoListXlsRoute);
 app.use("/api/ro-stats", roStatsRoute);
 app.use("/api/delete-product", deleteProductRoute);
+app.use("/api/get-http-request-log", getHttpRequestlog);
 
 // Listen
 let port = process.env.PORT || 4000;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { RepairOrderVersion } = require('../models/repair-order-version.js');
 
 const RepairOrderState = {
     PENDING: "PENDING",
@@ -23,7 +24,8 @@ const repairOrderSchema = new mongoose.Schema({
     locked: { type: Boolean, default: false },
     empty: { type: Boolean, default: true },
     note: { type: String, required: false },
-    exitDate: { type: Date, required: false }
+    exitDate: { type: Date, required: false },
+    author: { type: String, required: false }
 });
 
 const RepairOrder = mongoose.model("repairOrder", repairOrderSchema);
@@ -33,14 +35,15 @@ const CreateRepairOrderItem = (ParamRepairType, ParamDeviceRef, ParamDeviceIMEI,
 }
 
 const AddNewRepairOrderToDB = async (ParamLocation, ParamCustomer, ParamPhone, ParamROID, ParamItems, ParamCallback) => {
-    console.log("AddNewRepairOrderToDB()");
+    // console.log("AddNewRepairOrderToDB()");
     await new RepairOrder({ location: ParamLocation, customer: ParamCustomer, phone: ParamPhone, roid: ParamROID, items: ParamItems }).save();
     ParamCallback();
 }
 
 const AddEmptyRepairOrderToDB = async (ParamROID, ParamCallback) => {
-    console.log("AddEmptyRepairOrderToDB()");
+    // console.log("AddEmptyRepairOrderToDB()");
     await new RepairOrder({ location: " ", customer: " ", phone: " ", roid: ParamROID, items: [] }).save();
+    await new RepairOrderVersion({ location: " ", customer: " ", phone: " ", roid: ParamROID, items: [] }).save();
     ParamCallback();
 }
 

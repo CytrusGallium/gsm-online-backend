@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const { IncrementRepairOrderCounterAndGetNextROID } = require('../models/counter.js');
-const { AddEmptyRepairOrderToDB } = require('../models/repair-order.js');
+const { IncrementRepairOrderCounterAndGetNextROID } = require('../../models/counter.js');
+const { AddEmptyRepairOrderToDB } = require('../../models/repair-order.js');
 
 router.get("/", async (req, res) => {
 

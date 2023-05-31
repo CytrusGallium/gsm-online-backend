@@ -1,10 +1,25 @@
 const router = require("express").Router();
-const { RepairOrder } = require("../models/repair-order");
+const { RepairOrder } = require("../../models/repair-order");
 const sleep = require('sleep');
 
 router.get("/", async (req, res) => {
 
     console.log("Getting repair orders list...");
+
+    // Pagination
+    let skipAmount = 0;
+    const RO_PER_PAGE = 15;
+
+    if (req.query.page) {
+
+        let p = 0;
+        if (req.query.page < 0)
+            p = 0;
+        else
+            p = req.query.page;
+
+        skipAmount = p * RO_PER_PAGE;
+    }
 
     // Prepare search parameters if any
     let findParams = {};
@@ -30,7 +45,7 @@ router.get("/", async (req, res) => {
 
     try {
 
-        RepairOrder.find(findParams).sort({ time: 'descending' }).exec((err, result) => {
+        RepairOrder.find(findParams).sort({ time: 'descending' }).skip(skipAmount).limit(RO_PER_PAGE).exec((err, result) => {
             // sleep.sleep(1);
             res.status(200).send(PrepareDataForTable(result));
         });
@@ -44,7 +59,7 @@ router.get("/", async (req, res) => {
 const PrepareDataForTable = (ParamQueryResult) => {
     let result = [];
     ParamQueryResult.forEach(ro => {
-        result.push({ roid: ro.roid, time: ro.time, customer: ro.customer, phone: ro.phone, items: ro.items, locked: ro.locked, exitDate:ro.exitDate, totalPrice:ro.totalPrice });
+        result.push({ roid: ro.roid, time: ro.time, customer: ro.customer, phone: ro.phone, items: ro.items, locked: ro.locked, exitDate: ro.exitDate, totalPrice: ro.totalPrice, fulfilledPaiement: ro.fulfilledPaiement });
     });
     return result;
 }
