@@ -10,7 +10,7 @@ const CustomerSittingTable = mongoose.model("customerSittingTable", customerSitt
 
 const IfNoCustomerSittingTableDoThis = (ParamCallBack) => {
     CustomerSittingTable.count({}, function (err, count) {
-        console.log("CST Count = " + count);
+        // console.log("Customer Sitting Tables Count : " + count);
         if (Number(count) == 0) {
             ParamCallBack();
         }

@@ -13,12 +13,16 @@ const { LogHttpRequest } = require('./Middleware/RequestLogger');
 const WebSocket = require('ws');
 const net = require('net');
 
+console.log("-------------------------------------------------------------------------------");
+console.log("--------------------------REAKNOTRON BACKEND STARTUP---------------------------");
+console.log("-------------------------------------------------------------------------------");
+
 // ==========================================================================================
 // Mizzapp Bridge
 // ==========================================================================================
 try {
     const tcpClient = net.createConnection({ port: 33333 }, () => {
-        console.log('connected to server!');
+        console.log('NET : Connected to server!');
         tcpClient.write('hello server\r\n');
 
         // ==================================================================================
@@ -32,7 +36,7 @@ try {
             // When you receive a message, send that message to every socket.
             socket.on('message', (msg) => {
                 // sockets.forEach(s => s.send(msg));
-                console.log("MSG = " + msg);
+                console.log("WebSocket Message : " + msg);
             });
             // When a socket closes, or disconnects, remove it from the array.
             socket.on('close', () => {
@@ -41,7 +45,7 @@ try {
         });
 
         tcpClient.on('data', (data) => {
-            console.log("DATA from Mizzapp : " + data.toString());
+            console.log("NET : Message Received : " + data.toString());
             // tcpClient.end();
             sockets.forEach((s) => {
                 s.send(data.toString());
@@ -51,16 +55,14 @@ try {
     });
 
     tcpClient.on('error', (err) => {
-        console.error("Error JSON : " + JSON.stringify(err));
+        console.error("NET : Error : " + JSON.stringify(err));
     });
-
-
 
     tcpClient.on('end', () => {
-        console.log('disconnected from server');
+        console.log('NET : Disconnected from server.');
     });
 } catch (error) {
-    console.log("ERR");
+    console.log("ERRO : NET or WebSocket Error.");
 }
 // ==========================================================================================
 // Mizzapp Bridge END =======================================================================
@@ -144,20 +146,24 @@ const upload = multer({ storage: storage }) // This is the Middleware object
 // DotEnv
 dotenv.config();
 
+// Mongoose connect callback
+const MongooseConnectCallback = async () => {
+    // Initialize some tables
+    const wasAdminCreated = await CreateNewUser("admin", process.env.DEFAULT_ADMIN_PASSWORD, "ADMIN");
+    console.log("Admin creation result : " + wasAdminCreated);
+    CreateRepairOrderCounter();
+    CreateCateringOrderCounter();
+    IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
+    setTimeout(() => {console.log("-------------------------------------------------------------------------------");}, 2500);
+}
+
 // Connect to Database
 let DbConnectString = process.env.DB;
 console.log("Connecting to database : " + DbConnectString);
-mongoose.connect(DbConnectString, () => { console.log("MONGOOSE_CONNECT_CALLBACK()"); });
+mongoose.connect(DbConnectString, MongooseConnectCallback);
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database.'));
-
-// Initialize some tables
-const wasAdminCreated = CreateNewUser("admin", process.env.DEFAULT_ADMIN_PASSWORD, "ADMIN");
-console.log("Admin creation result = " + wasAdminCreated);
-CreateRepairOrderCounter();
-CreateCateringOrderCounter();
-IfNoCustomerSittingTableDoThis(() => CreateCustomerSittingTableInBatch(20));
 
 // Middleware Setup
 // app.all('*', LogHttpRequest);

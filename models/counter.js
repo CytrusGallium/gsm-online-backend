@@ -14,12 +14,12 @@ const CreateRepairOrderCounter = async () => {
     const counter = await Counter.findOne({ name: "repair-order" });
 
     if (counter) {
-        console.log("FALSE : repair-order counter already exists.");
+        console.log("Repair Order Counter : Already exists.");
         return false;
     }
 
     await new Counter({ name: "repair-order", value: 1 }).save();
-    console.log("TRUE : repair-order counter created.");
+    console.log("Repair Order Counter : Created.");
     return true;
 }
 
@@ -62,12 +62,12 @@ const CreateCateringOrderCounter = async () => {
     const counter = await Counter.findOne({ name: "catering-order" });
 
     if (counter) {
-        console.log("FALSE : catering-order counter already exists.");
+        console.log("Catering-order counter : Already exists.");
         return false;
     }
 
     await new Counter({ name: "catering-order", value: 1 }).save();
-    console.log("TRUE : catering-order counter created.");
+    console.log("Catering-order counter : created.");
     return true;
 }
 
@@ -78,7 +78,7 @@ const IncrementCateringOrderCounterAndGetNextCOID = async (ParamResultCallback) 
         const today = new Date();
         const genDate = counter.lastGenerationDate;
         
-        if (sameDay(genDate, today))
+        if (IsSameDay(genDate, today))
         {
             result = counter.value + 1;
             counter.value = result;
@@ -125,17 +125,17 @@ function AddZeroes(ParamID) {
     return result;
 }
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function GetRandomInt(ParamMin, ParamMax) {
+    ParamMin = Math.ceil(ParamMin);
+    ParamMax = Math.floor(ParamMax);
+    return Math.floor(Math.random() * (ParamMax - ParamMin + 1)) + ParamMin;
 }
 
-function sameDay(d1, d2) {
-    console.log("Comparing days : " + d1 + " AND " + d2);
-    return d1.getFullYear() === d2.getFullYear() &&
-        d1.getMonth() === d2.getMonth() &&
-        d1.getDate() === d2.getDate();
+function IsSameDay(ParamDayOne, ParamDayTwo) {
+    // console.log("Comparing days : " + d1 + " AND " + d2);
+    return ParamDayOne.getFullYear() === ParamDayTwo.getFullYear() &&
+        ParamDayOne.getMonth() === ParamDayTwo.getMonth() &&
+        ParamDayOne.getDate() === ParamDayTwo.getDate();
 }
 
 // Exports ===============================================================================================

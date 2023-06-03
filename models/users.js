@@ -30,18 +30,24 @@ const Validate = (data) => {
 
 const CreateNewUser = async (ParamName, ParamPass, ParamLevel) => {
 
-    const user = await User.findOne({ username: ParamName });
+    return new Promise(async (resolve) => {
 
-    if (user) {
-        console.log("FALSE");
-        return false;
-    }
+        try {
+            const user = await User.findOne({ username: ParamName });
 
-    const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    const hashPassword = await bcrypt.hash(ParamPass, salt);
-    await new User({ username: ParamName, password: hashPassword, level: ParamLevel }).save();
-    console.log("TRUE");
-    return true;
+            if (user) {
+                resolve(false);
+            }
+
+            const salt = await bcrypt.genSalt(Number(process.env.SALT));
+            const hashPassword = await bcrypt.hash(ParamPass, salt);
+            await new User({ username: ParamName, password: hashPassword, level: ParamLevel }).save();
+            resolve(true);
+        } catch (error) {
+            console.log("ERROR : " + error.message);
+            resolve(false);
+        }
+    });
 }
 
 module.exports = { User, Validate, CreateNewUser };
