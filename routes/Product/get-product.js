@@ -17,8 +17,13 @@ router.get("/", async (req, res) => {
             "sellable": 1,
             "barcode": 1,
             "mizzappID": 1,
-            "preparationDuration" : 1
+            "preparationDuration": 1,
+            "computerSpecsID": 0
         };
+
+        if (req.query.computerSpecs){
+            selectionParams.computerSpecsID = 1;
+        }
 
         if (req.query.id) {
             console.log("Searching for product by ID...");

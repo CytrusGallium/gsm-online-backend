@@ -122,7 +122,13 @@ const installDatabaseRoute = require('./routes/Database/install-database');
 const getRoListXlsRoute = require('./routes/Repair Order/get-ro-list-xls');
 const roStatsRoute = require('./routes/Repair Order/ro-stats');
 const deleteProductRoute = require('./routes/Product/delete-product');
-const getHttpRequestlog = require('./routes/Logs/get-http-request-log');
+const getHttpRequestlogRoute = require('./routes/Logs/get-http-request-log');
+// const facebookPostTestRoute = require('./routes/Facebook/facebook-post-test');
+const numicRoute = require('./routes/Computer Specs/Numic');
+const computerSpecsListRoute = require('./routes/Computer Specs/computer-specs-list');
+const computerSpecsToProductRoute = require('./routes/Computer Specs/computer-specs-to-product');
+const computerSpecsbyIdRoute = require('./routes/Computer Specs/computer-specs-by-id');
+const postOnFacebookRoute = require('./routes/Facebook/post-on-facebook');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -227,7 +233,13 @@ app.use("/api/install-database", upload.single("file"), installDatabaseRoute);
 app.use("/api/get-ro-list-xls", getRoListXlsRoute);
 app.use("/api/ro-stats", roStatsRoute);
 app.use("/api/delete-product", deleteProductRoute);
-app.use("/api/get-http-request-log", getHttpRequestlog);
+app.use("/api/get-http-request-log", getHttpRequestlogRoute);
+// app.use("/api/facebook-post-test", facebookPostTestRoute);
+app.use("/api/numic", numicRoute);
+app.use("/api/computer-specs-list", computerSpecsListRoute);
+app.use("/api/computer-specs-to-product", computerSpecsToProductRoute);
+app.use("/api/computer-specs-by-id", computerSpecsbyIdRoute);
+app.use("/api/post-on-facebook", postOnFacebookRoute);
 
 // Listen
 let port = process.env.PORT || 4000;
