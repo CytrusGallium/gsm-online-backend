@@ -10,11 +10,11 @@ router.post("/", async (req, res) => {
     console.log("Numic report incoming...");
 
     try {
-        // console.log("PASSWORD = " + req.body.password);
-        // console.log("PASSWORD ENV = " + process.env.NUMIC_PASSWORD);
+        console.log("PASSWORD = " + req.body.password);
+        console.log("PASSWORD ENV = " + process.env.NUMIC_PASSWORD);
 
         if (req.body.password && process.env.NUMIC_PASSWORD && req.body.password == process.env.NUMIC_PASSWORD) {
-            // console.log("CPU = " + req.body.cpu);
+            console.log("NuMic : CPU = " + req.body.cpu);
 
             await new ComputerSpecs({
                 brand: req.body.brand,

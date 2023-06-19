@@ -18,6 +18,23 @@ var computerSpecs = new mongoose.Schema({
     time: { type: Date, default: Date.now }
 });
 
+const ResolveComputerSpecs = (ParamID) => {
+
+    return new Promise((resolve) => {
+
+        try {
+
+            ComputerSpecs.findById(ParamID).exec((err, result) => {
+                resolve(result);
+            });
+
+        } catch (error) {
+            console.log("ERROR : " + error.message);
+            resolve(null);
+        }
+    });
+}
+
 const ComputerSpecs = mongoose.model("computerSpecs", computerSpecs);
 
-module.exports = { ComputerSpecs };
+module.exports = { ComputerSpecs, ResolveComputerSpecs };

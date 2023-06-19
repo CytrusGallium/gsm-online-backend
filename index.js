@@ -1,7 +1,6 @@
 // Dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
-const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -12,10 +11,16 @@ const { CreateCustomerSittingTableInBatch, IfNoCustomerSittingTableDoThis } = re
 const { LogHttpRequest } = require('./Middleware/RequestLogger');
 const WebSocket = require('ws');
 const net = require('net');
+const https = require('https');
+const fs = require('fs');
 
 console.log("-------------------------------------------------------------------------------");
 console.log("--------------------------REAKNOTRON BACKEND STARTUP---------------------------");
 console.log("-------------------------------------------------------------------------------");
+
+const app = express();
+
+
 
 // ==========================================================================================
 // Mizzapp Bridge
@@ -129,6 +134,7 @@ const computerSpecsListRoute = require('./routes/Computer Specs/computer-specs-l
 const computerSpecsToProductRoute = require('./routes/Computer Specs/computer-specs-to-product');
 const computerSpecsbyIdRoute = require('./routes/Computer Specs/computer-specs-by-id');
 const postOnFacebookRoute = require('./routes/Facebook/post-on-facebook');
+const computerShopProductListRoute = require('./routes/Product/computer-shop-product-list');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -240,7 +246,20 @@ app.use("/api/computer-specs-list", computerSpecsListRoute);
 app.use("/api/computer-specs-to-product", computerSpecsToProductRoute);
 app.use("/api/computer-specs-by-id", computerSpecsbyIdRoute);
 app.use("/api/post-on-facebook", postOnFacebookRoute);
+app.use("/api/computer-shop-product-list", computerShopProductListRoute);
 
-// Listen
 let port = process.env.PORT || 4000;
+
+// HTTP
 app.listen(port, () => console.log(`Server is up and runnning on port ${port}`));
+
+// HTTPS
+let k = fs.readFileSync(path.join(__dirname, 'Cert', 'key.pem'));
+let c = fs.readFileSync(path.join(__dirname, 'Cert', 'cert.pem'));
+const sslServer = https.createServer({
+    key: k,
+    cert: c
+}, app);
+
+// Run HTTPS Server
+// sslServer.listen(4000, () => console.log("HTTPS server running on port 4000."));

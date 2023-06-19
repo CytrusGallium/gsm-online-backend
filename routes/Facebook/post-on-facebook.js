@@ -10,14 +10,25 @@ router.post("/", async (req, res) => {
         const MESSAGE = encodeURIComponent(req.body.content);
         console.log("Posting on Facebook : " + MESSAGE);
 
+        const IMAGE_URL = encodeURIComponent("http://reaknotron.freemyip.com:4000/api/get-product-image?id=648dca036d999511ea5bbffd");
+
         try {
             
+            // let url = 'https://graph.facebook.com/' 
+            // + FB_PAGE_ID
+            // + '/feed?message=' 
+            // + MESSAGE
+            // + '&access_token='
+            // + FB_ACCESS_TOKEN;
+
             let url = 'https://graph.facebook.com/' 
             + FB_PAGE_ID
-            + '/feed?message=' 
+            + '/photos?message=' 
             + MESSAGE
             + '&access_token='
-            + FB_ACCESS_TOKEN;
+            + FB_ACCESS_TOKEN
+            + '&url='
+            + IMAGE_URL;
 
             const result = await axios.post(url);
 
