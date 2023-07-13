@@ -27,7 +27,26 @@ router.get("/", async (req, res) => {
             for (const p of result) {
                 if ((p.deleted == null || p.deleted == false) && p.computerSpecsID) {
                     let computerSpecs = await ResolveComputerSpecs(p.computerSpecsID);
-                    finalResult.push({ id: p._id, name: p.name, price: p.price, computerSpecs: computerSpecs });
+
+                    let brandCheck = true, cpuCheck = true;
+
+                    if (req.query.brand && computerSpecs.brand) {
+                        console.log("Brand = " + req.query.brand + " /// " + computerSpecs.brand);
+                        if (computerSpecs.brand.includes(req.query.brand))
+                            brandCheck = true;
+                        else
+                            brandCheck = false;
+                    }
+
+                    if (req.query.cpu && computerSpecs.cpu) {
+                        if (computerSpecs.cpu.includes(req.query.cpu))
+                            cpuCheck = true;
+                        else
+                            cpuCheck = false;
+                    }
+
+                    if (brandCheck && cpuCheck)
+                        finalResult.push({ id: p._id, name: p.name, price: p.price, computerSpecs: computerSpecs });
                 }
             }
 

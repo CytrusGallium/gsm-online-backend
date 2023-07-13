@@ -9,8 +9,11 @@ router.post("/", async (req, res) => {
         
         const MESSAGE = encodeURIComponent(req.body.content);
         console.log("Posting on Facebook : " + MESSAGE);
+      
+        console.log("Product ID : " + req.body.id);
 
-        const IMAGE_URL = encodeURIComponent("http://reaknotron.freemyip.com:4000/api/get-product-image?id=648dca036d999511ea5bbffd");
+        // const IMAGE_URL = encodeURIComponent("http://reaknotron.freemyip.com:4000/api/get-product-image?id=648dca036d999511ea5bbffd");
+        const IMAGE_URL = encodeURIComponent("https://harmless-six-oregano.glitch.me/api/get-product-image?id=" + req.body.id);
 
         try {
             

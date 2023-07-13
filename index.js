@@ -135,6 +135,8 @@ const computerSpecsToProductRoute = require('./routes/Computer Specs/computer-sp
 const computerSpecsbyIdRoute = require('./routes/Computer Specs/computer-specs-by-id');
 const postOnFacebookRoute = require('./routes/Facebook/post-on-facebook');
 const computerShopProductListRoute = require('./routes/Product/computer-shop-product-list');
+const repairOrderHistoryRoute = require('./routes/Repair Order/repair-order-history');
+const hostProductImageRoute = require('./routes/host-product-image');
 
 // Multer START Config -----------------------------------------------------------------------------------------------------------
 const multer = require('multer');
@@ -247,6 +249,8 @@ app.use("/api/computer-specs-to-product", computerSpecsToProductRoute);
 app.use("/api/computer-specs-by-id", computerSpecsbyIdRoute);
 app.use("/api/post-on-facebook", postOnFacebookRoute);
 app.use("/api/computer-shop-product-list", computerShopProductListRoute);
+app.use("/api/repair-order-history", repairOrderHistoryRoute);
+app.use("/api/host-product-image", hostProductImageRoute);
 
 let port = process.env.PORT || 4000;
 
